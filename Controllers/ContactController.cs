@@ -40,7 +40,7 @@ namespace CashOut.Controllers
 
         [HttpPost]
         [Route("create")]
-        public IActionResult Create(Contact contact)
+        public IActionResult Create([FromBody]Contact contact)
         {
             var obj = _contactService.Add(contact);
             if (contact == null)
@@ -62,7 +62,7 @@ namespace CashOut.Controllers
 
         [HttpPut]
         [Route("update")]
-        public IActionResult Update(Contact contact)
+        public IActionResult Update([FromBody]Contact contact)
         {
             int res = _contactService.Update(contact);
             if (res == 0)

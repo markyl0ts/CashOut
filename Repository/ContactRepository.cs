@@ -99,43 +99,44 @@ namespace CashOut.Repository
             string sql = "UPDATE Contact SET ";
             List<SqlParameter> sqlParameters = new List<SqlParameter>();
 
-            if (contact.FullName != null)
+            if (!string.IsNullOrEmpty(contact.FullName))
             {
                 sql += "[FullName] = @fullName,";
                 sqlParameters.Add(new SqlParameter("@fullName", contact.FullName));
             }
 
-            if(contact.FirstName != null)
+            if(!string.IsNullOrEmpty(contact.FirstName))
             {
                 sql += "[FirstName] = @firstName,";
                 sqlParameters.Add(new SqlParameter("@firstName", contact.FirstName));
             }
 
-            if(contact.LastName != null)
+            if(!string.IsNullOrEmpty(contact.LastName))
             {
                 sql += "[LastName] = @lastName,";
                 sqlParameters.Add(new SqlParameter("@lastName", contact.LastName));
             }
 
-            if(contact.MiddleName != null)
+            if(!string.IsNullOrEmpty(contact.MiddleName))
             {
                 sql += "[MiddleName] = @middleName,";
                 sqlParameters.Add(new SqlParameter("@MiddleName", contact.MiddleName));
             }
 
-            if(contact.Email != null)
+            if(!string.IsNullOrEmpty(contact.Email))
             {
                 sql += "[Email] = @email,";
                 sqlParameters.Add(new SqlParameter("@email", contact.Email));
             }
 
-            if(contact.Phone != null)
+            if(!string.IsNullOrEmpty(contact.Phone))
             {
                 sql += "[PhoneNo] = @phone,";
                 sqlParameters.Add(new SqlParameter("@phone", contact.Phone));
             }
 
             sql += "WHERE [id] = @id";
+            sqlParameters.Add(new SqlParameter("@id", contact.Id));
             sql = sql.Replace(",WHERE", " WHERE");
 
             int res = _sqlRepository.ExecNonQuery(sql, sqlParameters.ToArray());
