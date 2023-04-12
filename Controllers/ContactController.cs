@@ -37,5 +37,38 @@ namespace CashOut.Controllers
 
             return Ok(new { code = HttpStatusCode.OK, data = contact, message = Constants.Success });
         }
+
+        [HttpPost]
+        [Route("create")]
+        public IActionResult Create(Contact contact)
+        {
+            var obj = _contactService.Add(contact);
+            if (contact == null)
+                return NotFound(new { code = HttpStatusCode.NotFound, message = Constants.FailedToCreate, data = default(object) });
+
+            return Ok(new { code = HttpStatusCode.OK, data = obj, message = Constants.Success });
+        }
+
+        [HttpDelete]
+        [Route("delete/{contactId}")]
+        public IActionResult DeleteById(int contactId)
+        {
+            int res = _contactService.Delete(contactId);
+            if(res == 0)
+                return NotFound(new { code = HttpStatusCode.NotFound, message = Constants.FailedToDelete, data = default(object) });
+
+            return Ok(new { code = HttpStatusCode.OK, data = res, message = Constants.Success });
+        }
+
+        [HttpPut]
+        [Route("update")]
+        public IActionResult Update(Contact contact)
+        {
+            int res = _contactService.Update(contact);
+            if (res == 0)
+                return NotFound(new { code = HttpStatusCode.NotFound, message = Constants.FailedToUpdate, data = default(object) });
+
+            return Ok(new { code = HttpStatusCode.OK, data = res, message = Constants.Success });
+        }
     }
 }

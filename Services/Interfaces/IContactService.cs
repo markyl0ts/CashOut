@@ -6,5 +6,8 @@ namespace CashOut.Services.Interfaces
     {
         public List<Contact> GetAll();
         public Contact GetById(int id);
+        public object Add(Contact contact);
+        public int Delete(int id);
+        public int Update(Contact contact);
     }
 }

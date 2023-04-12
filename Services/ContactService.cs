@@ -21,5 +21,20 @@ namespace CashOut.Services
         {
             return _contactRepository.GetById(id);
         }
+
+        public object Add(Contact contact)
+        {
+            return _contactRepository.Add(contact);
+        }
+
+        public int Delete(int id)
+        {
+            return _contactRepository.Delete(id);
+        }
+
+        public int Update(Contact contact)
+        {
+            return _contactRepository.Update(contact);
+        }
     }
 }
