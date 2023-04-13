@@ -54,9 +54,11 @@ namespace CashOut
         {
             //Repository
             services.AddScoped<IContactRepository, ContactRepository>();
+            services.AddScoped<IWalletRepository, WalletRepository>();
 
             //Services
             services.AddScoped<IContactService, ContactService>();
+            services.AddScoped<IWalletService, WalletService>();
         }
 
         public void TransientServices(IServiceCollection services)

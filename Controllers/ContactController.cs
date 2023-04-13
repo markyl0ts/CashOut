@@ -43,7 +43,7 @@ namespace CashOut.Controllers
         public IActionResult Create([FromBody]Contact contact)
         {
             var obj = _contactService.Add(contact);
-            if (contact == null)
+            if (obj == null)
                 return NotFound(new { code = HttpStatusCode.NotFound, message = Constants.FailedToCreate, data = default(object) });
 
             return Ok(new { code = HttpStatusCode.OK, data = obj, message = Constants.Success });
