@@ -9,6 +9,7 @@ namespace CashOut.Repository.Interfaces
         public int Update(Contact contact);
         public int Delete(int contactId);
         public Contact GetById(int contactId);
+        public Contact GetByPhone(string phone);
 
     }
 }

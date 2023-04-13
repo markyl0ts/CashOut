@@ -142,5 +142,32 @@ namespace CashOut.Repository
             int res = _sqlRepository.ExecNonQuery(sql, sqlParameters.ToArray());
             return res;
         }
+
+        public Contact GetByPhone(string? phone)
+        {
+            Contact contact = new Contact();
+            string sql = "SELECT * FROM Contact WHERE [PhoneNo] = @phoneNo";
+            SqlParameter param = new SqlParameter("@phoneNo", phone);
+
+            using (SqlDataReader reader = _sqlRepository.ExecDataReader(sql, param))
+            {
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    contact.Id = reader.GetInt64(0);
+                    contact.GuidId = reader.GetGuid(1);
+                    contact.FullName = reader.GetString(2);
+                    contact.FirstName = reader.GetString(3);
+                    contact.LastName = reader.GetString(4);
+                    contact.MiddleName = reader.GetString(5);
+                    contact.Phone = reader.GetString(7);
+                    contact.Status = reader.GetString(8);
+                }
+
+                _sqlRepository.Dispose();
+            }
+
+            return contact;
+        }
     }
 }

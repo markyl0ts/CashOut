@@ -55,15 +55,21 @@ namespace CashOut
             //Repository
             services.AddScoped<IContactRepository, ContactRepository>();
             services.AddScoped<IWalletRepository, WalletRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<ICashOutRepository, CashOutRepository>();
 
             //Services
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IWalletService, WalletService>();
+            services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<ICashOutService, CashOutService>();
+
+            services.AddTransient<SqlRepository>();
         }
 
         public void TransientServices(IServiceCollection services)
         {
-            services.AddTransient<SqlRepository>();
+            services.AddTransient<Random>();
         }
     }
 }

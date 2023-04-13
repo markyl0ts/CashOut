@@ -36,5 +36,10 @@ namespace CashOut.Services
         {
             return _contactRepository.Update(contact);
         }
+
+        public Contact GetByPhone(string phone)
+        {
+            return _contactRepository.GetByPhone(phone);
+        }
     }
 }
