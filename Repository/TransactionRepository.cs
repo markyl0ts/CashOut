@@ -45,8 +45,6 @@ namespace CashOut.Repository
                     transaction.CreatedDate = reader.GetDateTime(5);
                     transaction.Status = reader.GetInt16(6);
                 }
-
-                _sqlRepository.Dispose();
             }
 
             return transaction;

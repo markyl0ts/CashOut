@@ -39,8 +39,6 @@ namespace CashOut.Repository
                     wallet.ContactId = reader.GetInt64(2);
                     wallet.Balance = reader.GetDecimal(3);
                 }
-
-                _sqlRepository.Dispose();
             }
 
             return wallet;
@@ -63,8 +61,6 @@ namespace CashOut.Repository
                     wallet.ContactId = reader.GetInt64(2);
                     wallet.Balance = reader.GetDecimal(3);
                 }
-
-                _sqlRepository.Dispose();
             }
 
             return wallet;

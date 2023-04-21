@@ -19,7 +19,8 @@ namespace CashOut.Repository
             Configuration = configuration;
             ConnectionString = configuration.GetConnectionString("DBConnection");
             _conn = new SqlConnection(ConnectionString);
-            _conn.Open();
+            if(_conn.State != ConnectionState.Open)
+                _conn.Open();
         }
 
         /// <summary>

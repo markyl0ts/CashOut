@@ -26,8 +26,6 @@ namespace CashOut.Repository
                     rate.GuidId = reader.GetGuid(1);
                     rate.Name = reader.GetString(2);
                 }
-
-                _sqlRepository.Dispose();
             }
 
             return rate;
@@ -56,8 +54,6 @@ namespace CashOut.Repository
                         rates.Add(rateRange);
                     }
                 }
-
-                _sqlRepository.Dispose();
             }
 
             return rates;
@@ -80,8 +76,6 @@ namespace CashOut.Repository
                     config.Balance = reader.GetDecimal(3);
                     config.RateId = reader.GetInt64(4);
                 }
-
-                _sqlRepository.Dispose();
             }
 
             return config;

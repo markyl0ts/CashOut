@@ -13,6 +13,18 @@ namespace CashOut.Services
             _cashOutRepository = cashOutRepository;
         }
 
+        public decimal GetRateFee(decimal amount, List<RateRange> rates)
+        {
+            decimal fee = 0;
+            foreach (RateRange rateRange in rates)
+            {
+                if (amount > rateRange.StartRange && amount < rateRange.EndRange)
+                    fee = rateRange.Fee; break;
+            }
+
+            return fee;
+        }
+
         public long GetRateRangeIdByAmount(decimal amount, List<RateRange> rates)
         {
             long rateRangeId = 0;

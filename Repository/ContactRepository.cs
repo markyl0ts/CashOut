@@ -57,8 +57,6 @@ namespace CashOut.Repository
                     contact.Phone = reader.GetString(7);
                     contact.Status = reader.GetString(8);
                 }
-
-                _sqlRepository.Dispose();
             }
 
             return contact;
@@ -87,8 +85,6 @@ namespace CashOut.Repository
                         contacts.Add(contact);
                     }
                 }
-
-                _sqlRepository.Dispose();
             }
 
             return contacts;
@@ -163,8 +159,6 @@ namespace CashOut.Repository
                     contact.Phone = reader.GetString(7);
                     contact.Status = reader.GetString(8);
                 }
-
-                _sqlRepository.Dispose();
             }
 
             return contact;

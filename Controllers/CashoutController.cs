@@ -1,6 +1,7 @@
 ﻿using CashOut.Helpers;
 using CashOut.Models;
 using CashOut.Models.Http;
+using CashOut.Models.ViewModels;
 using CashOut.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,11 +30,12 @@ namespace CashOut.Controllers
         }
 
         [HttpPost]
-        public IActionResult DoCashOut([FromBody] CashOutRequest cashOutRequest)
+        [Route("validate")]
+        public IActionResult ValidateCashout([FromBody] CashOutRequest cashOutRequest)
         {
             //-- Validate system config
             var config = _cashOutService.GetSystemConfig(cashOutRequest.SystemConfigId);
-            if (config == null)
+            if (config.Id == 0)
                 return NotFound(new { code = HttpStatusCode.NotFound, message = Constants.ConfigNotFound, data = default(object) });
 
             //-- Validate system rates
@@ -43,12 +45,12 @@ namespace CashOut.Controllers
 
             //-- Validate contact
             var contact = _contactService.GetByPhone(cashOutRequest.ContactNo);
-            if (contact == null)
+            if (contact.Id == 0)
                 return NotFound(new { code = HttpStatusCode.NotFound, message = Constants.RateNotConfigured, data = default(object) });
 
             //-- Validate contact wallet
             var wallet = _walletService.GetByContact(contact.Id);
-            if (wallet == null)
+            if (wallet.Id == 0)
                 return NotFound(new { code = HttpStatusCode.NotFound, message = Constants.WalletNotFound, data = default(object) });
 
             //-- Validate amount vs machine balance
@@ -60,19 +62,14 @@ namespace CashOut.Controllers
                 return BadRequest(new { code = HttpStatusCode.BadRequest, message = Constants.InsuficientWalletBalance, data = default(object) });
 
 
-            //-- Do cashout logic
-            //-- Add pending transaction - Status = 0
-            Transaction transaction = new Transaction();
-            transaction.ContactId = contact.Id;
-            transaction.RateRangeId = _cashOutService.GetRateRangeIdByAmount(cashOutRequest.Amount, rates);
-            transaction.Ammount = cashOutRequest.Amount;
-
-            var trans = _transactionService.Add(transaction);
-            if(trans == null)
-                return BadRequest(new { code = HttpStatusCode.BadRequest, message = Constants.FailedToCreate, data = default(object) });
-
-            //-- Call machine codes [Dispense & Print]
-            return Ok(new { code = HttpStatusCode.OK, data = trans, message = Constants.Success });
+            CashoutConfirmation confirmation = new()
+            {
+                ContactId = contact.Id,
+                ContactName = contact.FullName,
+                CashoutAmount = cashOutRequest.Amount,
+                CashoutFee = _cashOutService.GetRateFee(cashOutRequest.Amount, rates)
+            };
+            return Ok(new { code = HttpStatusCode.OK, data = confirmation, message = Constants.Success });
         }
     }
 }
