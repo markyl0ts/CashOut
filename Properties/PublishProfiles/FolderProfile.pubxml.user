@@ -3,4 +3,9 @@
 https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Projects\CashOut\bin\Release\net6.0\publish\</_PublishTargetUrl>
+    <History>True|2023-04-22T17:58:11.2947164Z;False|2023-04-23T01:57:37.2311559+08:00;True|2023-04-23T01:48:25.9553441+08:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
 </Project>
