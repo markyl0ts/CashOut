@@ -28,7 +28,7 @@ namespace CashOut.Repository
             return obj;
         }
 
-        public int Delete(int contactId)
+        public int Delete(long contactId)
         {
             string sql = "DELETE FROM Contact WHERE [id] = @id";
             SqlParameter param = new SqlParameter("@id", contactId);
@@ -36,7 +36,7 @@ namespace CashOut.Repository
             return res;
         }
 
-        public Contact GetById(int contactId)
+        public Contact GetById(long contactId)
         {
             Contact contact = new Contact();
             string sql = "SELECT * FROM Contact WHERE [id] = @id";

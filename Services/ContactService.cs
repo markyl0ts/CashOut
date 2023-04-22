@@ -17,7 +17,7 @@ namespace CashOut.Services
             return _contactRepository.GetAll();
         }
 
-        public Contact GetById(int id)
+        public Contact GetById(long id)
         {
             return _contactRepository.GetById(id);
         }
@@ -27,7 +27,7 @@ namespace CashOut.Services
             return _contactRepository.Add(contact);
         }
 
-        public int Delete(int id)
+        public int Delete(long id)
         {
             return _contactRepository.Delete(id);
         }

@@ -5,5 +5,6 @@
         public string? Name { get; set; }
         public decimal Balance { get; set; }
         public long RateId { get; set; }
+        public decimal AccumulatedAmount { get; set; }
     }
 }

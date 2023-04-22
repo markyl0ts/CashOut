@@ -1,4 +1,5 @@
-﻿using CashOut.Models;
+﻿using CashOut.Helpers;
+using CashOut.Models;
 using CashOut.Repository.Interfaces;
 using System.Data.SqlClient;
 
@@ -46,10 +47,10 @@ namespace CashOut.Repository
                         RateRange rateRange = new RateRange();
                         rateRange.Id = reader.GetInt64(0);
                         rateRange.GuidId = reader.GetGuid(1);
-                        rateRange.RateId = reader.GetInt64(2);
-                        rateRange.StartRange = reader.GetDecimal(3);
-                        rateRange.EndRange = reader.GetDecimal(4);
-                        rateRange.Fee = reader.GetDecimal(5);
+                        rateRange.RateId = reader.GetSafeLong(2);
+                        rateRange.StartRange = reader.GetSafeDecimal(3);
+                        rateRange.EndRange = reader.GetSafeDecimal(4);
+                        rateRange.Fee = reader.GetSafeDecimal(5);
 
                         rates.Add(rateRange);
                     }
@@ -72,13 +73,26 @@ namespace CashOut.Repository
                     reader.Read();
                     config.Id = reader.GetInt64(0);
                     config.GuidId = reader.GetGuid(1);
-                    config.Name = reader.GetString(2);
-                    config.Balance = reader.GetDecimal(3);
-                    config.RateId = reader.GetInt64(4);
+                    config.Name = reader.GetSafeString(2);
+                    config.Balance = reader.GetSafeDecimal(3);
+                    config.RateId = reader.GetSafeLong(4);
+                    config.AccumulatedAmount = reader.GetSafeDecimal(5);
                 }
             }
 
             return config;
+        }
+
+        public int UpdateKioskBalanceAndAccumulatedAmount(long configId, decimal balance, decimal accumulatedAmount)
+        {
+            string sql = "UPDATE [System] SET [Balance] = @balance, [AccumulatedAmount] = @amount WHERE Id = @configId";
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            parameters.Add(new SqlParameter("@balance", balance));
+            parameters.Add(new SqlParameter("@amount", accumulatedAmount));
+            parameters.Add(new SqlParameter("@configId", configId));
+
+            int res = _sqlRepository.ExecNonQuery(sql, parameters.ToArray());
+            return res;
         }
     }
 }

@@ -9,5 +9,6 @@ namespace CashOut.Services.Interfaces
         public bool IsValidAmount(decimal amount, decimal balance);
         public long GetRateRangeIdByAmount(decimal amount, List<RateRange> rates);
         public decimal GetRateFee(decimal amount, List<RateRange> rates);
+        public int UpdateKioskBalanceAndAccumulatedAmount(long configId, decimal balance, decimal accumulatedAmount);
     }
 }

@@ -7,8 +7,8 @@ namespace CashOut.Repository.Interfaces
         public List<Contact> GetAll();
         public object Add(Contact contact);
         public int Update(Contact contact);
-        public int Delete(int contactId);
-        public Contact GetById(int contactId);
+        public int Delete(long contactId);
+        public Contact GetById(long contactId);
         public Contact GetByPhone(string phone);
 
     }

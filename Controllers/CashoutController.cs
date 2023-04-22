@@ -5,6 +5,7 @@ using CashOut.Models.ViewModels;
 using CashOut.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using System.Net;
 
 namespace CashOut.Controllers
@@ -67,9 +68,58 @@ namespace CashOut.Controllers
                 ContactId = contact.Id,
                 ContactName = contact.FullName,
                 CashoutAmount = cashOutRequest.Amount,
+                ConfigId = config.Id,
+                RateRangeId = _cashOutService.GetRateRangeIdByAmount(cashOutRequest.Amount, rates),
                 CashoutFee = _cashOutService.GetRateFee(cashOutRequest.Amount, rates)
             };
             return Ok(new { code = HttpStatusCode.OK, data = confirmation, message = Constants.Success });
+        }
+
+        [HttpPost]
+        [Route("confirm")]
+        public IActionResult ConfirmCashout([FromBody] CashoutConfirmation confirmation)
+        {
+            //-- Create Transaction
+            Transaction transaction = new()
+            {
+                SystemId = confirmation.ConfigId,
+                ContactId = confirmation.ContactId,
+                RateRangeId = confirmation.RateRangeId,
+                Amount = confirmation.CashoutAmount
+            };
+            var trans = _transactionService.Add(transaction);
+            if(trans.Id == transaction.Id)
+                return BadRequest(new { code = HttpStatusCode.BadRequest, message = Constants.FailedToCreate + " Transaction", data = default(object) });
+
+            return Ok(new { code = HttpStatusCode.OK, data = trans, message = Constants.Success });
+        }
+
+        [HttpPost]
+        [Route("finalize")]
+        public IActionResult UpdateKioskBalance([FromBody] Transaction transaction)
+        {
+            //-- Update wallet balance
+            var wallet = _walletService.GetByContact(transaction.ContactId);
+            WalletBalance walletBalance = new()
+            {
+                WalletId = wallet.Id,
+                Balance = wallet.Balance - transaction.Amount
+            };
+            var walletUpd = _walletService.UpdateBalance(walletBalance);
+            if (walletUpd == 0)
+                return BadRequest(new { code = HttpStatusCode.BadRequest, message = Constants.FailedToUpdate + " Wallet", data = default(object) });
+
+            //-- Update system accumulated amount
+            var systemConfig = _cashOutService.GetSystemConfig(transaction.SystemId);
+            decimal kioskBalance = systemConfig.Balance - transaction.Amount;
+            decimal kioskAccumulatedAmount = systemConfig.AccumulatedAmount + transaction.Amount;
+            var sysUpd = _cashOutService.UpdateKioskBalanceAndAccumulatedAmount(systemConfig.Id, kioskBalance, kioskAccumulatedAmount);
+            if (sysUpd == 0)
+                return BadRequest(new { code = HttpStatusCode.BadRequest, message = Constants.FailedToUpdate + " Kiosk amounts", data = default(object) });
+
+            //-- TODO: Revert previous update when failed update
+            
+            return Ok(new { code = HttpStatusCode.OK, data = default(object), message = Constants.Success });
         }
     }
 }

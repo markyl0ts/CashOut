@@ -61,5 +61,10 @@ namespace CashOut.Services
 
             return true;
         }
+
+        public int UpdateKioskBalanceAndAccumulatedAmount(long configId, decimal balance, decimal accumulatedAmount)
+        {
+            return _cashOutRepository.UpdateKioskBalanceAndAccumulatedAmount(configId, balance, accumulatedAmount);
+        }
     }
 }
