@@ -17,7 +17,6 @@ namespace CashOut
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
             services.AddControllers().AddJsonOptions(x =>
             {
                 // serialize enums as strings in api responses (e.g. Role)
@@ -27,6 +26,16 @@ namespace CashOut
                 x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             });
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:443", "http://localhost:8080")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                    });
+            });
             services.AddMvc();
             services.AddSwaggerGen();
             services.AddControllers();
@@ -36,14 +45,18 @@ namespace CashOut
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "CashOut API"); });
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "CashOut API"); });
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

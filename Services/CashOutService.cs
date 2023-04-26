@@ -18,7 +18,7 @@ namespace CashOut.Services
             decimal fee = 0;
             foreach (RateRange rateRange in rates)
             {
-                if (amount > rateRange.StartRange && amount < rateRange.EndRange)
+                if (amount >= rateRange.StartRange && amount <= rateRange.EndRange)
                     fee = rateRange.Fee; break;
             }
 
@@ -31,7 +31,7 @@ namespace CashOut.Services
 
             foreach(RateRange rateRange in rates)
             {
-                if(amount > rateRange.StartRange && amount < rateRange.EndRange)
+                if(amount >= rateRange.StartRange && amount <= rateRange.EndRange)
                     rateRangeId = rateRange.Id; break;
             }
 

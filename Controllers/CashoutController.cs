@@ -3,6 +3,7 @@ using CashOut.Models;
 using CashOut.Models.Http;
 using CashOut.Models.ViewModels;
 using CashOut.Services.Interfaces;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -30,6 +31,7 @@ namespace CashOut.Controllers
             _cashOutService = cashOutService;
         }
 
+        [EnableCors]
         [HttpPost]
         [Route("validate")]
         public IActionResult ValidateCashout([FromBody] CashOutRequest cashOutRequest)
@@ -47,7 +49,7 @@ namespace CashOut.Controllers
             //-- Validate contact
             var contact = _contactService.GetByPhone(cashOutRequest.ContactNo);
             if (contact.Id == 0)
-                return NotFound(new { code = HttpStatusCode.NotFound, message = Constants.RateNotConfigured, data = default(object) });
+                return NotFound(new { code = HttpStatusCode.NotFound, message = Constants.ContactNotFound, data = default(object) });
 
             //-- Validate contact wallet
             var wallet = _walletService.GetByContact(contact.Id);
@@ -75,6 +77,7 @@ namespace CashOut.Controllers
             return Ok(new { code = HttpStatusCode.OK, data = confirmation, message = Constants.Success });
         }
 
+        [EnableCors]
         [HttpPost]
         [Route("confirm")]
         public IActionResult ConfirmCashout([FromBody] CashoutConfirmation confirmation)

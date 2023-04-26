@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -8,6 +9,7 @@ namespace CashOut.Controllers
     [ApiController]
     public class TestController : ControllerBase
     {
+        [EnableCors]
         [HttpGet]
         public IActionResult Test()
         {
